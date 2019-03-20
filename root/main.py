@@ -1,8 +1,8 @@
-# from config import config
-# import utime
-# import ujson
-# import machine
+# main.py
+#
 
+def main():
+    print("Main is running...")
 
-def run():
-  print("Main is running...")
+if __name__ == '__main__':
+    main()

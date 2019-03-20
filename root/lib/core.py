@@ -4,24 +4,16 @@ import machine
 from umqtt.simple import MQTTClient
 
 
-# WIFI constants
-WIFI_MAX_RETRIES = 3  # number of retries before reset
-WIFI_TIMEOUT_MS = 10000  # timout value for Wifi connection 
-
-# MQTT constants
-MQTT_MAX_RETRIES = 3  # maximum retries before reset
-
-
-def sleep(config):
-    if config.ENABLE_DEEPSLEEP:
+def sleep(sysconfig):
+    if sysconfig.ENABLE_DEEPSLEEP:
         rtc = machine.RTC()
         rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-        rtc.alarm(rtc.ALARM0, config.SLEEP_TIME_S * 1000)
-        print('entering deepsleep ({} seconds)'.format(config.SLEEP_TIME_S))
+        rtc.alarm(rtc.ALARM0, sysconfig.SLEEP_TIME_S * 1000)
+        print('entering deepsleep ({} seconds)'.format(sysconfig.SLEEP_TIME_S))
         machine.deepsleep()
     else:
-        print('sleeping for {} seconds.'.format(config.SLEEP_TIME_S))
-        utime.sleep(config.SLEEP_TIME_S)
+        print('sleeping for {} seconds.'.format(sysconfig.SLEEP_TIME_S))
+        utime.sleep(sysconfig.SLEEP_TIME_S)
 
 
 class WifiConnectionError(Exception):
@@ -34,19 +26,19 @@ class MQTTConnectionError(Exception):
 
 class MQTTClientWrapper:
 
-    def __init__(self, config):
+    def __init__(self, sysconfig):
 
-        self.server = config.MQTT_SERVER
-        self.port = config.MQTT_PORT
+        self.server = sysconfig.MQTT_SERVER
+        self.port = sysconfig.MQTT_PORT
         self.mqtt_client = MQTTClient(
-            client_id=config.MQTT_CLIENT_ID,
+            client_id=sysconfig.MQTT_CLIENT_ID,
             server=self.server,
             port=self.port,
-            user=config.MQTT_USER,
-            password=config.MQTT_PASSWORD,
-            keepalive=config.MQTT_KEEPALIVE,
-            ssl=config.MQTT_SSL,
-            ssl_params=config.MQTT_SSL_PARAMS,
+            user=sysconfig.MQTT_USER,
+            password=sysconfig.MQTT_PASSWORD,
+            keepalive=sysconfig.MQTT_KEEPALIVE,
+            ssl=sysconfig.MQTT_SSL,
+            ssl_params=sysconfig.MQTT_SSL_PARAMS,
         )
         self.mqtt_client.set_callback(self._process_incoming_msgs)
         self.callbacks = {}
@@ -109,9 +101,9 @@ class MQTTClientWrapper:
 
 class WifiWrapper:
 
-    def __init__(self, config):
-        self.ssid = config.WIFI_SSID
-        self.password = config.WIFI_PASSWORD
+    def __init__(self, sysconfig):
+        self.ssid = sysconfig.WIFI_SSID
+        self.password = sysconfig.WIFI_PASSWORD
         self.max_retries = WIFI_MAX_RETRIES
         self.timeout_ms = WIFI_TIMEOUT_MS
         self.ap_if = network.WLAN(network.AP_IF)
@@ -141,7 +133,7 @@ class WifiWrapper:
             else:
                 raise WifiConnectionError()
         print('done')
-        print('network config:', self.sta_if.ifconfig())
+        print('network sysconfig:', self.sta_if.ifsysconfig())
 
     @property
     def isconnected(self):

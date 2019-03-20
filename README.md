@@ -1,4 +1,21 @@
-# ESP8266 IOT Nodes 
+DISCLAIMER: I am a complete noob!  I'm using this project as a learning tool.  Several aspects will also be overkill for a project of this size and complexity.
+**********
+
+OVERVIEW:
+Rearchitecture of Stefan Lehmann's implementation of iot devices on ESP8266 boards:
+
+    (https://github.com/stlehmann/esp8266_iot_nodes.git)
+
+I what to seperate board configuration and application configuration to set up an environment where core functionality
+(wifi and mqtt) is initialized for all new devices.  From there, easily download/implement application-specific code
+for sensors, relays, devices, and functionality.
+
+I will update readme as I progress to my architecture.
+
+-- Jeff
+
+#################################################
+# ESP8266 IOT Nodes
 
 A collection of IoT clients based on the famous ESP8266 microcontroller 
 (aka [NodeMCU][0]) using the [Micropython][1] programming language. All clients

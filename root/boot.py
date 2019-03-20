@@ -1,18 +1,23 @@
 # This file is executed on every boot (including wake-boot from deepsleep)
 # import esp
 # esp.osdebug(None)
-from config import config
-import main
+from sysconfig import sysconfig
 import core
 
 global wifi, mqtt
 
 # Connect Wifi
-wifi = core.WifiWrapper(config)
+wifi = core.WifiWrapper(sysconfig)
 wifi.connect()
 
 # Connect MQTT
-mqtt = core.MQTTClientWrapper(config)
-mqtt.connect()
-
-main.run()
+mqtt = core.MQTTClientWrapper(sysconfig)
+try:
+    mqtt.connect()
+    print("MQTT connected...")
+# Publish mqtt connection status to system topic.
+#    msg = ('jgb-esp8266-52 MQTT connected')
+#    mqtt.publish(SYS_TOPIC, msg)
+except:
+    print("MQQT could not connect")
+    sys.exit(1)
